@@ -5,7 +5,6 @@ print("Welcome to Rock Paper Scissors!")
 username = input("What is your username?\n")
 print("Let's start " + username + "!")
 
-
 try:
     df = pd.read_excel(f"{username}.xlsx")
 except FileNotFoundError:
@@ -15,7 +14,7 @@ except FileNotFoundError:
 playing_over = True
 while playing_over: 
 
-    play_stats = int(input("Menu: \n 1: Play \n 2: Stats"))
+    play_stats = int(input("Menu: \n 1: Play \n 2: Stats \n 3: Exit\n"))
 
     if play_stats == 1:
 
@@ -67,17 +66,18 @@ while playing_over:
             elif player_choice.lower() == 'scissors':
                 if computer_choice == 0:
                     print("The computer choose rock, you lose!")
-                    print(f"The series is {player_wins} to {computer_wins}!")
                     computer_wins = computer_wins + 1
                     df['Scissors Choosen'] = df['Scissors Choosen'] + 1
                     df['Games Lost'] = df['Games Lost'] + 1
+                    print(f"The series is {player_wins} to {computer_wins}!")
 
                 elif computer_choice == 1:
                     print("The computer choose paper, you win!")
-                    print(f"The series is {player_wins} to {computer_wins}!")
                     player_wins = player_wins + 1
                     df['Scissors Choosen'] = df['Scissors Choosen'] + 1
                     df['Games Won'] = df['Games Won'] + 1
+                    print(f"The series is {player_wins} to {computer_wins}!")
+
                 elif computer_choice == 2:
                     print("The computer choose scissors, it's a tie.")
                     print(f"The series is {player_wins} to {computer_wins}!")
@@ -101,7 +101,8 @@ while playing_over:
                 print("Sorry " + username + " you lost the series")
                 df['Series Lost'] = df['Series Lost'] + 1
                 game_over = True
-                playing = input("Do you want to keep playing (yes/no)?")
+                
+                playing = input("Do you want to keep playing (yes/no)?\n")
                 if playing.lower() == 'yes':
                     playing_over = True
                 elif playing.lower() == 'no':
@@ -111,6 +112,15 @@ while playing_over:
 
     elif play_stats == 2:
         print(df)
+        erase = int(input("Keep or erase stats?\n 1. Keep\n 2. Erase"))
+        if erase == 1:
+            continue
+        elif erase == 2:
+            for col in df.columns:
+                df[col].values[:] = 0
+        else:
+            print("Error: Please Choose 1 or 2")
+
         playing = input("Do you want to keep playing (yes/no)?")
         if playing.lower() == 'yes':
             playing_over = True
@@ -118,8 +128,10 @@ while playing_over:
             playing_over = False
         else:
             print("Error: Choose Yes or No")
+    elif play_stats == 3:
+        playing_over = False
     else:
-        print("Error: Choose 1 or 2")
+        print("Error: Choose 1, 2, 3")
 
 df.to_excel(f"{username}.xlsx", index=False)
 print(f"Thanks for playing {username} come again soon!")
